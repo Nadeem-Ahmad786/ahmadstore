@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.1",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.5",
+    "stripe": "^10.14.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "Ecommerce website",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nadeem-Ahmad786/Ecommerce.git"
+  },
+  "author": "Nadeem Ahmad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nadeem-Ahmad786/Ecommercepart1/issues"
+  },
+  "homepage": "https://github.com/Nadeem-Ahmad786/Ecommercepart1#readme"
+}
