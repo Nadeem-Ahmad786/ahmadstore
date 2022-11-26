@@ -5,6 +5,8 @@ import { UserContext } from './App';
 import { Button } from "./styles/Button";
 import {FiEdit3} from "react-icons/fi";
 import {MdDeleteOutline} from "react-icons/md";
+import {getLocalStorage, setLocalStorage} from "./helper/localstorage"
+
 const SingleProduct = () => {
   const navigate = useNavigate();
   const {id} = useParams();
@@ -14,7 +16,7 @@ const SingleProduct = () => {
   const {state, dispatch} = useContext(UserContext);
   const PostData = async(e) =>{
     e.preventDefault();
-    const user_id = state[1]._id;
+    const user_id = getLocalStorage("user")._id;
     const res = await fetch("/cart", {
      method: "POST",
      headers: {
@@ -59,7 +61,7 @@ console.log(singleProductData.state);
     <div className='main_div'>
     <div className="container">
     <div className="sub_con">
-    { state[1]!==null && state[1].role ==="admin" &&<div>
+    { getLocalStorage("user")!==null && getLocalStorage("user").role ==="admin" &&<div>
       <form>
       <MdDeleteOutline className="icon" onClick={PostDeleteData}/>
       </form>

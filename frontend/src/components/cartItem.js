@@ -1,5 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import {useNavigate}  from "react-router-dom";
+import {getLocalStorage} from "../helper/localstorage"
+import {setLocalStorage} from "../helper/localstorage"
 import { UserContext } from '../App';
 const CartItem = (props) => {
   const tempCss ={
@@ -11,7 +13,7 @@ const CartItem = (props) => {
   const {state, dispatch} = useContext(UserContext);
   var quantity=undefined;
   const PostData = async() =>{
-    const user_id = state[1]._id;
+    const user_id = getLocalStorage("user")._id;
     const product_id = props.product_id;
     // const quantity = 1;
     console.log(quantity);
@@ -30,6 +32,9 @@ const CartItem = (props) => {
              window.alert(data.message)
          }
          else{
+          dispatch({type:"USER", payload:[true, data.userData]})
+          setLocalStorage("user", data.userData);
+        console.log( data.userData);
              window.alert(data.message);
          }
  }

@@ -1,7 +1,6 @@
 import React, {useContext, useState} from 'react'
 import { useParams, Link } from 'react-router-dom';
 import { useLocation, useNavigate } from 'react-router';
-import { UserContext } from './App';
 const EditProduct = () => {
     const navigate = useNavigate();
     const {id} = useParams();

@@ -1,11 +1,11 @@
 import React, {useEffect, useContext } from 'react';
 import { UserContext } from '../App';
-
+import {getLocalStorage} from "../helper/localstorage"
 import { Button } from "../styles/Button";
 const PayButton = ({cartItems}) => {
     const {state, dispatch} = useContext(UserContext);
     const handleCheckout = async() => {
-      const userId = state[1]._id;
+      const userId = getLocalStorage("user")._id;
       const res = await fetch("/create-checkout-session", {
        method: "POST",
        headers: {

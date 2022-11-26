@@ -2,11 +2,12 @@ import React, {useEffect, useState,useContext } from "react";
 import CartItem from './components/cartItem';
 import { Button } from "./styles/Button";
 import { UserContext } from './App';
+import {getLocalStorage, setLocalStorage} from "./helper/localstorage"
 import PayButton from "./components/PayButton"
 const Cart = () => {
   const {state, dispatch} = useContext(UserContext);
   const [cartProducts, setCartProducts] = useState([]);
-  const [tmpadrress, settmpAddress] = useState(state[1].address)
+  const [tmpadrress, settmpAddress] = useState(getLocalStorage("user").address)
   useEffect(() => {
     fetch("/cart", {
         method: "GET",
@@ -25,7 +26,7 @@ const Cart = () => {
   // console.log(cartProducts);
   const PostAddress = async(e) =>{
     e.preventDefault();
-    const user_id = state[1]._id;
+    const user_id = getLocalStorage("user")._id;
     settmpAddress(document.getElementById("address").value);
     const address = document.getElementById("address").value;
     const res = await fetch("/saveAddress", {
@@ -42,7 +43,10 @@ const Cart = () => {
              window.alert(data.message)
          }
          else{
-             window.alert(data.message);
+          const user = getLocalStorage("user")
+          user.address = address
+          setLocalStorage("user",user)
+          window.alert(data.message);
          }
  }
   const inlineCss = { 

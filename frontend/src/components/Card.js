@@ -1,31 +1,41 @@
-import React,{useNavigate, useContext} from "react";
-import {Link} from 'react-router-dom';
+import React,{ useContext} from "react";
+import {useNavigate,Link} from 'react-router-dom';
+import {getLocalStorage} from "../helper/localstorage"
+import {setLocalStorage} from "../helper/localstorage"
 import { UserContext } from '../App';
 const Card = (props) => {
 
   const {state, dispatch} = useContext(UserContext);
-
+  const navigate = useNavigate();
   const PostData = async(e) =>{
     e.preventDefault();
-    const user_id = state[1]._id;
-    const product_id = props.product_id;
-    // const quantity = 1;
-    const res = await fetch("/cart", {
-     method: "POST",
-     headers: {
-         "Content-Type" : "application/json"
-     },
-     body: JSON.stringify({
-         user_id, product_id
-     })
-    }) ;
-    const data = await res.json();
-         if( data.status === 400 || !data){
-             window.alert(data.message)
-         }
-         else{
-             window.alert(data.message);
-         }
+    if(getLocalStorage("user")){
+      const user_id = getLocalStorage("user")._id;
+      const product_id = props.product_id;
+      const res = await fetch("/cart", {
+      method: "POST",
+      headers: {
+          "Content-Type" : "application/json"
+      },
+      body: JSON.stringify({
+          user_id, product_id
+      })
+      }) ;
+      const data = await res.json();
+          if( data.status === 400 || !data){
+              window.alert(data.message)
+          }
+          else{
+            console.log(data);
+              dispatch({type:"USER", payload:[true, data.userData]})
+              console.log(data.userData)
+              setLocalStorage("user", data.userData);
+              window.alert(data.message);
+          }
+    }
+    else{
+      navigate("/login");
+    }
  }
     return (
       <div className="card">

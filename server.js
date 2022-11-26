@@ -130,53 +130,53 @@ app.get("/cart",auth, async function(req, res){
             }
             cartProducts.push(item);
     }
-   // console.log(cartProducts);
+//    console.log(cartProducts);
     res.send(cartProducts);
 });
 
 app.post("/cart", auth, async function(req, res){
     let {user_id, product_id, quantity} = req.body;
-    //console.log(req.body);
+    // console.log(req.body);
     // console.log(user_id);
     // console.log(product_id);
     if(quantity>=1){
         const user = await User.findOne({_id: user_id}).select({ cart: {$elemMatch: {productid: product_id}}});
         user.cart[0].quantity = quantity;
-        user.save();
-        res.status(201).send({message: "quantity is changed"});
+        await user.save();
+        const updatedata = await User.findOne({_id: user_id});
+        res.status(201).send({message: "quantity is changed", userData: updatedata});
         return ;
     }
     if(quantity==undefined){
         const user = await User.findOne({_id: user_id}).select({ cart: {$elemMatch: {productid: product_id}}});
         if(user.cart.length ===1){
             user.cart[0].quantity += 1;
-            user.save();
-            res.status(201).send({message: "quantity is changed"});
+            await user.save();
+            const updatedata = await User.findOne({_id: user_id});
+            res.status(201).send({message: "quantity is changed", userData: updatedata});
             return ;
         }
         quantity= 1;
   //      User.update({_id: user_id}, {$push: {cart: {productid: product_id, quantity: quantity}}});
 
-        User.findOneAndUpdate({_id:user_id},{$push: {cart: {productid: product_id, quantity: quantity}}}, function(err, foundUser){
-            if(err)
-                console.log("User not found");
-        });
-        res.status(201).send({message: "product added succesfully"});
+        await User.findOneAndUpdate({_id:user_id},{$push: {cart: {productid: product_id, quantity: quantity}}});
+        const updatedata = await User.findOne({_id: user_id});
+        res.status(201).send({message: "product added succesfully", userData: updatedata});
         return ;
     }
     if(quantity==0){
         const user =await User.findById(user_id);
             if(!user){
                 window.alert("User not found");
-                res.status(400).send({message: "User not found"});
+                res.status(400).send({message: "User not found", userData: null});
                 return ;
             }
             user.cart = user.cart.filter((currentProduct) => {
                     return currentProduct.productid != product_id;
             });
            // console.log(user.cart);
-            user.save();
-            res.status(201).send({message:"product remove successfully"});
+            await user.save();
+            res.status(201).send({message:"product remove successfully", userData: user});
             return ;
     
         // User.findOneAndUpdate({_id:user_id},{$pull: {cart: {productid: product_id}}}, function(err, foundUser){
@@ -192,7 +192,6 @@ app.post("/cart", auth, async function(req, res){
 
 app.get("/products/all", async(req, res) => {
     const products = await Product.find({});
-       console.log(products);
        res.status(200).send(products);
 });
 
@@ -219,15 +218,15 @@ app.delete("/deleteproduct", auth, authAdmin("admin"), async(req, res) => {
 });
 app.post("/editproduct", auth, authAdmin("admin"), async(req, res) =>{ 
     
-    const {productName, description, imgUrl, price, features, colors} = req.body;
-    Product.findByIdAndUpdate({_id: _id},{productName: productName,
+    const {productId, productName, description, imgUrl, price, features, colors} = req.body;
+    await Product.findByIdAndUpdate({_id: productId},{
+        productName: productName,
         productDescription: description,
         productImage: imgUrl,
         productPrice: Number(price),
         productFeatures : features,
-        productColors: colors})
+        productColors: colors,})
     res.status(200).send({message: "Product edited successfully!"});
-    
 });
 app.post("/saveAddress", auth, async(req, res) =>{
     const {user_id, address} = req.body;

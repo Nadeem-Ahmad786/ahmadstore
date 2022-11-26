@@ -1,5 +1,7 @@
 import React, {useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
+import { deleteLocalStorage } from "./helper/localstorage";
+
 // import { NavLink } from 'react-router-dom';
 // import { Button } from "./styles/Button";
 import { UserContext } from './App';
@@ -21,6 +23,7 @@ const Logout = () => {
         credentials: "include"
     }).then((res) => {
         dispatch({type:"USER", payload:[false, null]})
+        deleteLocalStorage('user');
         console.log(state);
         navigate("/login");
         if( res.status !== 200 || !res){

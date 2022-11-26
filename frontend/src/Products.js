@@ -20,7 +20,6 @@ const Products = () => {
         console.log(err);
     });
   },[]);
-
   return (
     <div className='rapper'>
     {products.map((product) => (
