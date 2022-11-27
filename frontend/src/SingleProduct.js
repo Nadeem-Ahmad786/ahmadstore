@@ -15,6 +15,7 @@ const SingleProduct = () => {
   // console.log(data.state.description);
   const {state, dispatch} = useContext(UserContext);
   const PostData = async(e) =>{
+    if(getLocalStorage("user")){
     e.preventDefault();
     const user_id = getLocalStorage("user")._id;
     const res = await fetch("/cart", {
@@ -33,6 +34,10 @@ const SingleProduct = () => {
          else{
              window.alert(data.message);
          }
+        }
+        else{
+          navigate("/login");
+        }
  }
  const PostDeleteData = async(e) =>{
   const productName = id;
